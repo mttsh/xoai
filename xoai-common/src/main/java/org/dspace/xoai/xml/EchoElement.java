@@ -61,7 +61,11 @@ public class EchoElement implements XmlWritable {
                     while (it.hasNext()) {
                         Attribute attr = it.next();
                         QName attrName = attr.getName();
-                        addNamespaceIfRequired(writer, attrName);
+                        if (!attrName.getPrefix().isEmpty()) {
+                        	// We do not want an explicit xmlns="" for every non-prefixed attribute (this is implicit in the XML definition), 
+                        	// so the namespace is only added when there is a explicit prefix
+                            addNamespaceIfRequired(writer, attrName);
+                        }
                         writer.writeAttribute(attrName.getPrefix(), attrName.getNamespaceURI(), attrName.getLocalPart(), attr.getValue());
                     }
                 } else if (event.isEndElement()) {
